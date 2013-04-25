@@ -681,9 +681,9 @@ input:focus {
 .me.title h3 {
   color: #000000;
   float: left;
-  font-size: 24px;
+  font-size: 20px;
   font-style: italic;
-  padding: 3% 0 0;
+  padding: 4% 0 0;
 }
 
 
@@ -742,6 +742,13 @@ input:focus {
 	background: url("../i/arrow2.png") no-repeat scroll 92% center transparent;
 	background-size: 8% auto;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.noicon .item_wrap {
+  background: url("../i/arrow2.png") no-repeat scroll 92% center transparent;
+  background-size: 5% auto;
+  padding: 9% 18% 9% 5%;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
 
