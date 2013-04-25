@@ -1,5 +1,5 @@
 
-var aligner = '#lisandid';
+var aligner = '#treenerpakkumised';
 var plus = 0;
 var last = "";
 var arr = new Array();
@@ -7,6 +7,8 @@ var offset = jQuery('.topbar').height();
 var me = "";
 var bbar = "";
 var wind = "";
+
+var toBuy = new Array();
 
 
 
@@ -67,7 +69,7 @@ function reposition(){
 	$(document).ready(function (){
 		
 		setTimeout( function(){
-			resizeby('#lisandid', 105);
+			resizeby('#treenerpakkumised', 105);
 			$('body').css('opacity','1');
 			offset = jQuery('.topbar').height();
 		}, 200);
@@ -257,9 +259,84 @@ function reposition(){
 		});
 
 		
+			
+		
+		$('.treenerpakkumisedbtn').click(function(e){
+			e.preventDefault();
+			$(this).addClass('active');
+			
+			hideallexcept('#treenerpakkumised');
+			$('#treenerpakkumised').addClass('open').removeClass('hide');
+			
+			
+			$('.loading').show();
+			
+			resizeby('#treenerpakkumised', 105);
+			
+			setTimeout(function(){
+				reposition();
+			}, 300);
+		});
 		
 		
 		
+		
+		
+		
+		
+		
+		
+		
+		$('.selectbtn img').click(function(e){
+			//e.preventDefault();
+			var id = $(this).parent().parent().data('id');
+			if(!$(this).parent().parent().hasClass('selected')){
+				$(this).parent().parent().addClass('selected');					
+				toBuy.push(id);			
+			}else{
+				$(this).parent().parent().removeClass('selected');	
+				while (toBuy.indexOf( id ) !== -1) {
+					toBuy.splice(toBuy.indexOf( id ), 1);
+				}
+			}			
+			if(toBuy.length >= 1){
+				$('.buybtn').addClass('slideIn');
+			}else{
+				$('.buybtn').removeClass('slideIn');
+			}
+			//console.log(toBuy.length);
+		});
+		
+		
+		
+		
+		
+		$('.buybtn').click(function(e){
+			//e.preventDefault();
+			
+			$('#buyoverlay').addClass('prepare').addClass('scale');
+			setTimeout(function(){
+				$('#buyoverlay').addClass('scaleIn');
+			}, 500);
+			
+			var here = $('#buyoverlay .checkout');
+			
+			here.html('');
+			
+			for(var i = 0; i < toBuy.length; i++){
+				
+				var id = toBuy[i];
+				
+				var name = $('#treenerpakkumised .box33[data-id='+ id +']').children('h4.name').text();
+				var price = $('#treenerpakkumised .box33[data-id='+ id +']').children('h4.price').text();
+				
+				var html = '<div class="inbasket"></div>';
+				
+				here.append( name + ' ' );
+				
+			}
+			
+		});
 		
 		
 		$('.detailsbtn').click(function(e){
