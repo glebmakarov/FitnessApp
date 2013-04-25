@@ -1,5 +1,5 @@
 
-var aligner = '#diary';
+var aligner = '#pakkumised';
 var plus = 0;
 var last = "";
 var arr = new Array();
@@ -28,6 +28,14 @@ function resizeby(_this, _plus){
 	me = jQuery(_this + ' .me').height();
 	bbar = jQuery('.bottombar').height();
 	wind = jQuery(window).height();
+	
+	if(_this == '#index'){
+		jQuery('.bottombar .homebtn').removeClass('hidden');
+		jQuery('.bottombar .profilebtn').addClass('hidden');
+	}else{
+		jQuery('.bottombar .homebtn').addClass('hidden');
+		jQuery('.bottombar .profilebtn').removeClass('hidden');
+	}
 	
 	
 	var toscrollheight = Number( wind - ( offset + me + bbar ) );
@@ -59,7 +67,7 @@ function reposition(){
 	$(document).ready(function (){
 		
 		setTimeout( function(){
-			resizeby('#diary', 105);
+			resizeby('#pakkumised', 105);
 			$('body').css('opacity','1');
 			offset = jQuery('.topbar').height();
 		}, 200);
@@ -77,6 +85,10 @@ function reposition(){
 			for(var i=1; i < arr.length; i++){
 				$('#'+arr[i]).addClass('hide');
 			}	
+			
+			$('#menu').removeClass('active');
+			$('#themenu').removeClass('show');
+			$('.topbar, .bottombar, '+aligner).removeClass('showmenu');
 		}
 		
 		
@@ -96,23 +108,17 @@ function reposition(){
 			}
 		});
 		
-		/* $('#themenu').bind('swipe', function(){
-				$('#menu').removeClass('active');
-				$('#themenu').removeClass('show');
-				$('.topbar, .bottombar, '+aligner).removeClass('showmenu');
-        }); */
-		
 		$('body').touchwipe({
 			 wipeLeft: function() { 
 					$('#menu').removeClass('active');
 					$('#themenu').removeClass('show');
 					$('.topbar, .bottombar, '+aligner).removeClass('showmenu');
 			 },
-			 wipeRight: function() { alert("right"); },		 
+			 //wipeRight: function() { alert("right"); },		 
 			//wipeUp: function() { alert("up"); },
 			//wipeDown: function() { alert("down"); },
-			 min_move_x: 20,
-			 min_move_y: 20,
+			 min_move_x: 15,
+			 min_move_y: 15,
 			 preventDefaultEvents: false
 		});
 
@@ -137,7 +143,7 @@ function reposition(){
 		});
 		
 		
-		$('.fb').click(function(e){
+		$('.fb, .homebtn').click(function(e){
 			e.preventDefault();
 			$(this).addClass('active');
 			
@@ -173,18 +179,99 @@ function reposition(){
 			}, 300);
 			
 		});
+		
+			
+		$('.diarybtn').click(function(e){
+			e.preventDefault();
+			$(this).addClass('active');
+			
+			hideallexcept('#diary');
+			$('#diary').addClass('open').removeClass('hide');
+			
+			
+			$('.loading').show();
+			
+			resizeby('#diary', 105);
+			
+			setTimeout(function(){
+				reposition();
+			}, 300);
+		});
 			
 			
 			
+		
+		$('.pakkumisedbtn').click(function(e){
+			e.preventDefault();
+			$(this).addClass('active');
 			
+			hideallexcept('#pakkumised');
+			$('#pakkumised').addClass('open').removeClass('hide');
+			
+			
+			$('.loading').show();
+			
+			resizeby('#pakkumised', 105);
+			
+			setTimeout(function(){
+				reposition();
+			}, 300);
+		});
+			
+			
+		
+		$('.soodustusedbtn').click(function(e){
+			e.preventDefault();
+			$(this).addClass('active');
+			
+			hideallexcept('#soodustused');
+			$('#soodustused').addClass('open').removeClass('hide');
+			
+			
+			$('.loading').show();
+			
+			resizeby('#soodustused', 105);
+			
+			setTimeout(function(){
+				reposition();
+			}, 300);
+		});
+		
+		
+		
+		
+		
+		$('.detailsbtn').click(function(e){
+			//e.preventDefault();
+			
+			$('#overlay').addClass('prepare').addClass('scale');
+			setTimeout(function(){
+				$('#overlay').addClass('scaleIn');
+			}, 400);
+		});
+		
+		
+		$('.backbtn').click(function(e){
+			e.preventDefault();
+			
+			$(this).parent().removeClass('scaleIn');
+			
+			var _this = $(this);
+			
+			setTimeout(function(){
+				_this.parent().removeClass('scale').removeClass('prepare');
+			}, 400);
+		});
+		
 			
 		/* MAKE HOVER */
+		/* FOR STATIC ELEMENTS ONLY, NOT WORKING ON SCROLLABLE!! */
 		
-		 $('.touchhover').on('touchstart', function(){
-			//e.preventDefault();
+		 $('.touchhover').on('touchstart', function(e){
+			e.preventDefault();
 			$(this).addClass('hover');
 		}).on('touchend', function(e){
-			//e.preventDefault();
+			e.preventDefault();
 			$(this).removeClass('hover');
 		});
 		
