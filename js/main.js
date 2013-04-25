@@ -1,5 +1,5 @@
 
-var aligner = '#pakkumised';
+var aligner = '#lisandid';
 var plus = 0;
 var last = "";
 var arr = new Array();
@@ -67,7 +67,7 @@ function reposition(){
 	$(document).ready(function (){
 		
 		setTimeout( function(){
-			resizeby('#pakkumised', 105);
+			resizeby('#lisandid', 105);
 			$('body').css('opacity','1');
 			offset = jQuery('.topbar').height();
 		}, 200);
@@ -236,6 +236,27 @@ function reposition(){
 				reposition();
 			}, 300);
 		});
+			
+			
+		
+		$('.lisandidbtn').click(function(e){
+			e.preventDefault();
+			$(this).addClass('active');
+			
+			hideallexcept('#lisandid');
+			$('#lisandid').addClass('open').removeClass('hide');
+			
+			
+			$('.loading').show();
+			
+			resizeby('#lisandid', 105);
+			
+			setTimeout(function(){
+				reposition();
+			}, 300);
+		});
+
+		
 		
 		
 		
@@ -247,7 +268,7 @@ function reposition(){
 			$('#overlay').addClass('prepare').addClass('scale');
 			setTimeout(function(){
 				$('#overlay').addClass('scaleIn');
-			}, 400);
+			}, 500);
 		});
 		
 		
