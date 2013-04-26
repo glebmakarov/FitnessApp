@@ -434,7 +434,6 @@ $(window).load(function (){
 			$(this).removeClass('hover');
 		});
 		
-
 	});
 })(window.jQuery);
 
