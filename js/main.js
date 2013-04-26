@@ -38,11 +38,11 @@ function resizeby(_this, _plus){
 			jQuery('.toscroll').css('height', toscrollheight + 'px');
 			
 			if(LEVEL >= 2){
-				$('#topbar .backbtn').fadeIn(600);
-				$('#menu').fadeOut(600);
+				$('#topbar .backbtn').show();
+				$('#menu').hide();
 			}else{
-				$('#topbar .backbtn').fadeOut(600);
-				$('#menu').fadeIn(600);
+				$('#topbar .backbtn').hide();
+				$('#menu').show();
 			}
 		}, 400);
 		aligner = _this;
@@ -434,6 +434,7 @@ $(window).load(function (){
 			$(this).removeClass('hover');
 		});
 		
+
 	});
 })(window.jQuery);
 
