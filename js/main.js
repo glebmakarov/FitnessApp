@@ -406,7 +406,7 @@ $(window).load(function (){
 		});
 		
 		
-		$('.backbtn').on(eventEnd, function(e){
+		$('.overlay .backbtn').on(eventEnd, function(e){
 			e.preventDefault();
 			
 			$('#overlay').addClass('scaleOut');
