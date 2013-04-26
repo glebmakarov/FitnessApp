@@ -723,6 +723,24 @@ input:focus {
 	width: 100%;
 	position: relative;
 }
+.item.pump {
+	background: url("../i/pump.jpg") no-repeat scroll center center transparent;
+	background-size: 100% auto;
+	border-top: none;
+	border-bottom: none;
+	height: auto;
+	width: 100%;
+	position: relative;
+}
+
+.whitebg{
+	background: rgb(243,243,243);
+	background: -moz-linear-gradient(top,  rgba(243,243,243,1) 0%, rgba(229,229,229,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(243,243,243,1)), color-stop(100%,rgba(229,229,229,1)));
+	background: -webkit-linear-gradient(top,  rgba(243,243,243,1) 0%,rgba(229,229,229,1) 100%);
+	background: linear-gradient(to bottom,  rgba(243,243,243,1) 0%,rgba(229,229,229,1) 100%);
+
+}
 
 .alusta{
 	background: none;
@@ -747,14 +765,21 @@ input:focus {
 	padding: 8% 18%;
 	background: url("../i/arrow2.png") no-repeat scroll 92% center transparent;
 	background-size: 8% auto;
-	/* text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9); */
+}
+
+.pump .item_wrap {
+	padding: 32% 18%;
+	background: none;
+}
+
+.tavatestbtn h3 {
+  font-size: 26px;
 }
 
 .noicon .item_wrap {
   background: url("../i/arrow2.png") no-repeat scroll 92% center transparent;
   background-size: 5% auto;
   padding: 9% 18% 9% 5%;
-  /* text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9); */
 }
 
 
@@ -775,6 +800,46 @@ input:focus {
 
 .diary .last_update{
 	color: #000;
+}
+
+.uuskava:before {
+	position: absolute;
+	width: 35px;
+	height: 35px;
+	background: url(../i/icon_list.png) no-repeat center center #373737;
+	background-size: 70% auto;
+	border-radius: 50%;
+	top: 50%;
+	margin-top: -15px;
+	left: 5%;
+	content: "";
+}
+
+
+.jatkakava:before {
+	position: absolute;
+	width: 35px;
+	height: 35px;
+	background: url(../i/icon_jatka.png) no-repeat center center #373737;
+	background-size: 70% auto;
+	border-radius: 50%;
+	top: 50%;
+	margin-top: -15px;
+	left: 5%;
+	content: "";
+}
+
+.fitnesstest:before {
+	position: absolute;
+	width: 35px;
+	height: 35px;
+	background: url(../i/icon_test.png) no-repeat center center #373737;
+	background-size: 70% auto;
+	border-radius: 50%;
+	top: 50%;
+	margin-top: -15px;
+	left: 5%;
+	content: "";
 }
 
 .diary:before {
@@ -1087,6 +1152,7 @@ input:focus {
   margin: 0;
   position: absolute;
   top: 18%;
+ color: #FFF;
 }
 
 .overlay .loadedcontent{
@@ -1131,6 +1197,141 @@ input:focus {
   color: #FFFFFF;
   line-height: 18px;
   margin-bottom: 4%;
+}
+
+
+
+#tavatest .toscroll{
+	text-align: center;
+}
+
+
+.nobg_item{
+
+	background: rgb(69,67,67);
+	background: -moz-linear-gradient(top,  rgba(69,67,67,1) 0%, rgba(18,18,18,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(69,67,67,1)), color-stop(100%,rgba(18,18,18,1)));
+	background: -webkit-linear-gradient(top,  rgba(69,67,67,1) 0%,rgba(18,18,18,1) 100%);
+	background: linear-gradient(to bottom,  rgba(69,67,67,1) 0%,rgba(18,18,18,1) 100%);
+	color: #FACB23;
+	
+	width: 90%;
+	font-size: 22px;
+	text-align: center;
+	display: inline-block;
+	margin: 6% 0 0;
+	
+	border: 1px solid rgba(69,67,67,0.5);
+	border-radius: 6px;
+
+}
+
+.nobg_item.hover{
+
+	background: -moz-linear-gradient(top,  rgba(18,18,18,1) 0%, rgba(69,67,67,1)  100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(18,18,18,1)), color-stop(100%,rgba(69,67,67,1)));
+	background: -webkit-linear-gradient(top,  rgba(18,18,18,1) 0%,rgba(69,67,67,1) 100%);
+	background: linear-gradient(to bottom,  rgba(18,18,18,1) 0%,rgba(69,67,67,1) 100%);
+}
+
+.nobg_item h3{
+	padding: 3% 0;
+}
+
+
+.nobg_item.datepicker h3{
+	background: url("../i/edit.png") no-repeat scroll 95% center transparent;
+	background-size: 7% auto;
+}
+
+
+.nobg_item.meesbtn h3, .nobg_item.nainebtn h3{
+	background: url("../i/arrow7.png") no-repeat scroll 95% center transparent;
+	background-size: 7% auto;
+}
+
+
+.testing{
+	background: #fff;
+	border-bottom: 2px solid #FBCB23;
+}
+
+.testing .thenumber{
+	background: #000;
+	border-bottom: 2px solid #FBCB23;
+	text-align: center;
+	height: 35px;
+	margin-bottom: 30px;
+}
+
+.testing .thenumber .element{
+	background: url(../i/element.png) no-repeat center center transparent;
+	background-size: 100% auto;
+	display: inline-block;
+    height: 50px;
+    position: relative;
+    top: 10px;
+    width: 50px;
+}
+
+.testing .thenumber .element span {
+  font-size: 25px;
+  position: relative;
+  top: 6px;
+  font-weight: bold;
+}
+
+.testing .testing_wrap{
+	padding: 4%;
+}
+
+.testing h3{
+	text-align: center;
+	font-size: 18px;
+	margin-bottom: 4%;
+}
+
+.testing img {
+  float: left;
+  width: 40%;
+  height: auto;
+  margin: 0 4% 0 0;
+}
+
+.testing p {
+  float: left;
+  width: 56%;
+  font-size: 12px;
+}
+
+.testing .answer {
+  background: none repeat scroll 0 0 #000000;
+  margin-top: 4%;
+  padding: 4%;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.answer label {
+    float: left;
+	width: 35%;
+	color: #fff;
+	font-size: 14px;
+	line-height: 14px;
+}
+
+.answer input {
+    float: left;
+	width: 60%;
+	padding: 2%;
+	border: none;
+	background: #FBCB23;
+	box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+	border-radius: 4px;
+}
+
+.answer .nobg_item h3{
+	margin: 0;
 }
 
 
@@ -1254,10 +1455,12 @@ input:focus {
 			font-size: 20px;
 		}
 		
-		.diary:before, .soodustused:before, .pakkumised:before{
+		.diary:before, .soodustused:before, .pakkumised:before, .fitnesstest:before, .jatkakava:before, .uuskava:before{
 			width: 30px;
 			height: 30px;
 		}
+		
+	
 		
 		#themenu .menu span {
 			background-size: 80% auto;
@@ -1293,4 +1496,3 @@ input:focus {
 		  font-size: 26px;
 		}
 }
-

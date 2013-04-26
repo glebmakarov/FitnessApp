@@ -1,6 +1,7 @@
 var LATEST = '';
+var SUBLATEST = '';
 var LEVEL = 0;
-var aligner = '#treenerpakkumised';
+var aligner = '#tavatest';
 var plus = 0;
 var last = "";
 var arr = new Array();
@@ -10,22 +11,19 @@ var bbar = "";
 var wind = jQuery(window).height();
 var toBuy = new Array();
 var eventEnd = (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? "touchend" : "click";
-
+var goingback = false;
 
 jQuery(window).resize(function ($){
 
 	offset = jQuery('.topbar').height();
 	jQuery('.centered').css('top', offset + 'px');
-	jQuery('.page-wrap').css('height', Number(jQuery(aligner).height() + plus) +  'px');
+	//jQuery('.page-wrap').css('height', Number(jQuery(aligner).height() + plus) +  'px');
 	
 	console.log(jQuery(window).width() + 'px');
 });
 
+
 function resizeby(_this, _plus){
-	//setTimeout(function(){
-		//var height = $(_this).height();
-		//var newheight = Number( height + _plus );
-		
 		
 		me = jQuery(_this + ' .me').height();
 		
@@ -40,14 +38,19 @@ function resizeby(_this, _plus){
 			if(LEVEL >= 2){
 				$('#topbar .backbtn').show();
 				$('#menu').hide();
+				if(!goingback) $('#topbar .backbtn').attr('data-deep'+LEVEL, LATEST );
+
 			}else{
 				$('#topbar .backbtn').hide();
 				$('#menu').show();
 			}
+			
+			
+			goingback = false;
 		}, 400);
 		aligner = _this;
 		plus = _plus;
-	//}, 300);
+
 }
 
 function reposition(){
@@ -78,7 +81,7 @@ $(window).load(function (){
 			bbar = jQuery('#bottombar').height();
 			offset = jQuery('.topbar').height();
 			
-			resizeby('#treenerpakkumised', 105);
+			resizeby('#tavatest', 105);
 			$('body').addClass('fadeIn');
 			
 			LATEST = '#'+ $('.open').attr('id');
@@ -89,17 +92,16 @@ $(window).load(function (){
 (function($){
 	$(document).ready(function (){
 		
-	
-		
-		
 		function hideallexcept( _this , caller){
 		
 		
-			LEVEL = $(caller).data('level');
-			//console.log(LEVEL);
-			
+			if($(caller).data('level')){
+				LEVEL = $(caller).data('level');
+				$('#topbar .backbtn').attr('data-deep', LEVEL );
+			}
+
+		
 			LATEST = '#'+ $('.open').attr('id');
-			
 			//alert(LATEST);
 			if( LATEST != _this) {
 				$(LATEST).addClass('hide');
@@ -112,26 +114,26 @@ $(window).load(function (){
 			
 		}
 		
-			function goBack( _this , caller){
+		function goBack( _this , caller){
 
-				LEVEL = $(caller).data('level');
+				//LEVEL = $(caller).data('level');
+				LEVEL = $('#topbar .backbtn').attr('data-deep' );
 
 				
 				var LATESTBackup = LATEST;
 				LATEST = aligner;
 				
-
+				
+				
 				$(aligner).addClass('hide');
 				
-				$('#menu').removeClass('active');
-				$('#themenu').removeClass('show');
-				$('.topbar, .bottombar, '+aligner).removeClass('showmenu');
 				
 				setTimeout(function(){
-					jQuery(LATEST).removeClass('open').removeClass('hide');
+					$(LATEST).removeClass('open').removeClass('hide');
+				}, 300);
 					hideMenu()
 					aligner = LATESTBackup;
-				}, 500);
+				
 			
 			
 		}
@@ -142,16 +144,44 @@ $(window).load(function (){
 		$('#topbar .backbtn').on(eventEnd, function(e){
 					e.preventDefault();
 					
-					console.log(LATEST);
+					goingback = true;
 					
-					$('.menu').removeClass('active');	
-					$(LATEST).addClass('open');	
-					goBack(LATEST, this);
-								
+					var d = $('#topbar .backbtn').attr('data-deep' );
 					
-					$('.bottombar, .topbar').addClass('menuin');
-					resizeby(LATEST, 105);
-					//reposition();
+					if(d){
+						
+						console.log(d);
+						var newLATEST = $('#topbar .backbtn').attr('data-deep' + d );
+						
+						$('.menu').removeClass('active');	
+						$(newLATEST).addClass('open');	
+						
+						$('#topbar .backbtn').attr('data-deep' + d, '' );
+						d = Number(d) - Number(1);
+						$('#topbar .backbtn').attr('data-deep', d );
+						
+						
+						goBack(LATEST, this);
+									
+						
+						$('.bottombar, .topbar').addClass('menuin');
+						resizeby(newLATEST, 105);
+						
+						//console.log(d, newLATEST, LEVEL);
+						
+						//LEVEL = d ;
+						
+					}else{
+					
+						$('.menu').removeClass('active');	
+						$(LATEST).addClass('open');	
+						goBack(LATEST, this);
+									
+						
+						$('.bottombar, .topbar').addClass('menuin');
+						resizeby(LATEST, 105);
+						//reposition();
+					}
 		});
 		
 		
@@ -260,9 +290,7 @@ $(window).load(function (){
 			
 			reposition();
 		});
-			
-			
-			
+
 		
 		$('.pakkumisedbtn').on(eventEnd, function(e){
 			e.preventDefault();
@@ -280,7 +308,6 @@ $(window).load(function (){
 			reposition();
 		});
 			
-			
 		
 		$('.soodustusedbtn').on(eventEnd, function(e){
 			e.preventDefault();
@@ -297,8 +324,7 @@ $(window).load(function (){
 			
 			reposition();
 		});
-			
-			
+				
 		
 		$('.lisandidbtn').on(eventEnd, function(e){
 			e.preventDefault();
@@ -317,8 +343,6 @@ $(window).load(function (){
 		});
 
 		
-			
-		
 		$('.treenerpakkumisedbtn').on(eventEnd, function(e){
 			e.preventDefault();
 			$('.menu').removeClass('active');
@@ -336,10 +360,70 @@ $(window).load(function (){
 		});
 		
 		
+		$('.testbtn').on(eventEnd, function(e){
+			e.preventDefault();
+			$('.menu').removeClass('active');
+			$(this).addClass('active');
+			
+			hideallexcept('#test', this);
+			$('#test').addClass('open');
+			
+			
+			//$('.loading').show();
+			
+			resizeby('#test', 105);
+			
+			reposition();
+		});
 		
 		
+		$('.alustatreeningutbtn').on(eventEnd, function(e){
+			e.preventDefault();
+			$('.menu').removeClass('active');
+			$(this).addClass('active');
+			
+			hideallexcept('#alustatreeningut', this);
+			$('#alustatreeningut').addClass('open');
+			
+			
+			//$('.loading').show();
+			
+			resizeby('#alustatreeningut', 105);
+			
+			reposition();
+		});
 		
+		$('.tavatestbtn').on(eventEnd, function(e){
+			e.preventDefault();
+			$('.menu').removeClass('active');
+			$(this).addClass('active');
+			
+			hideallexcept('#tavatest', this);
+			$('#tavatest').addClass('open');
+			
+			
+			//$('.loading').show();
+			
+			resizeby('#tavatest', 105);
+			
+			reposition();
+		});
 		
+		$('.meesbtn, .nainebtn').on(eventEnd, function(e){
+			e.preventDefault();
+			$('.menu').removeClass('active');
+			$(this).addClass('active');
+			
+			hideallexcept('#fitnesstest', this);
+			$('#fitnesstest').addClass('open');
+			
+			
+			//$('.loading').show();
+			
+			resizeby('#fitnesstest', 105);
+			
+			reposition();
+		});
 		
 		
 		
