@@ -209,7 +209,7 @@ body{
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.bottombar a.active{
+.bottombar a.hover{
 background: -moz-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.71) 0%, rgba(239,239,239,0) 63%, rgba(229,229,229,0) 100%);
 background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,0.71)), color-stop(63%,rgba(239,239,239,0)), color-stop(100%,rgba(229,229,229,0)));
 background: -webkit-radial-gradient(center, ellipse cover,  rgba(255,255,255,0.71) 0%,rgba(239,239,239,0) 63%,rgba(229,229,229,0) 100%);
@@ -1226,7 +1226,7 @@ input:focus {
 
 }
 
-.nobg_item.active{
+.nobg_item.hover{
 
 	background: -moz-linear-gradient(top,  rgba(18,18,18,1) 0%, rgba(69,67,67,1)  100%);
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(18,18,18,1)), color-stop(100%,rgba(69,67,67,1)));
