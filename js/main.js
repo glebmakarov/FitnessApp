@@ -14,6 +14,10 @@ var toBuy = new Array();
 var eventEnd = (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? "touchend" : "click";
 var goingback = false;
 var updating = false;
+var anim = '1';
+var tulemus = '';
+var TOTALRESULT = 0;
+var nolevel = false;
 
 jQuery(window).resize(function ($) {
 
@@ -40,7 +44,7 @@ function resizeby(_this, _plus) {
 		if (LEVEL >= 2) {
 			$('#topbar .backbtn').show();
 			$('#menu').hide();
-			if (!goingback)
+			if (!goingback && !nolevel)
 				$('#topbar .backbtn').attr('data-deep' + LEVEL, LATEST);
 				
 		} else {
@@ -48,6 +52,7 @@ function resizeby(_this, _plus) {
 			$('#menu').show();
 		}
 
+		nolevel = false;
 		goingback = false;
 	//}, 100);
 	aligner = _this;
@@ -57,14 +62,14 @@ function resizeby(_this, _plus) {
 
 function reposition() {
 	setTimeout(function () {
-		//jQuery('.loading').hide();
-		//for(var i=1; i < arr.length; i++){
-		//jQuery('#'+arr[i]).removeClass('open').removeClass('hide');
-		//}
 		if (LATEST != aligner) {
 			jQuery(LATEST).removeClass('open').removeClass('hide').remove();
 		}
-		hideMenu();
+		
+		$('#loading').removeClass('loading');
+		setTimeout(function () {
+			$('#loading').css('display','none');
+		}, 200);
 	}, 500);
 }
 
@@ -93,17 +98,23 @@ $(window).load(function () {
 
 (function ($) {
 	$(document).ready(function () {
-	
+		function showLoading(){
+			$('#loading').css('display','block');
+			setTimeout(function () {
+				$('#loading').addClass('loading');
+			}, 10);
+		}
 	
 		function teleportMe( where ){
 			//if(updating){
 				LATEST = '#' + $('.open').attr('id');
 		
 				if (LATEST != '#'+where) {
-				
+					showLoading();
+					
 					$('#topbar .backbtn').attr('data-deep', LEVEL);
 					
-					$.get(where + '.html', function(data){
+					$.get(where + '.html',{ "_": $.now() }, function(data){
 						$(data).insertAfter( LATEST )
 						
 						jQuery('.centered').css('top', offset + 'px');
@@ -114,6 +125,8 @@ $(window).load(function () {
 						$(LATEST).addClass('hide');
 						
 						setTimeout(function () {
+							
+						
 							$('#' + where).addClass('open');
 							
 							if( LEVEL >= '1' ){
@@ -131,7 +144,7 @@ $(window).load(function () {
 							bindEvents();
 							
 							updating = false;
-						}, 10);
+						}, 20);
 
 					});
 				}
@@ -167,11 +180,11 @@ $(window).load(function () {
 			var LATESTBackup = LATEST;
 			LATEST = aligner;
 
-			$(aligner).addClass('hide');
+			//$(aligner).addClass('hide');
 
-			setTimeout(function () {
+			/* setTimeout(function () {
 				$(LATEST).removeClass('open').removeClass('hide').remove();
-			}, 300);
+			}, 300); */
 			hideMenu()
 			aligner = LATESTBackup;
 
@@ -179,6 +192,7 @@ $(window).load(function () {
 
 		$('#topbar .backbtn').bind(eventEnd, function (e) {
 			e.preventDefault();
+			showLoading();
 
 			goingback = true;
 
@@ -188,7 +202,9 @@ $(window).load(function () {
 
 				//console.log(d);
 				newLATEST = $('#topbar .backbtn').attr('data-deep' + d);
-
+				
+				
+					
 				$('.menu').removeClass('active');
 				
 				//$(newLATEST).addClass('open');
@@ -200,6 +216,8 @@ $(window).load(function () {
 				goBack(LATEST, this);
 				
 				newLATESTnohash = newLATEST.replace('#','');
+				
+				//console.log('newLATEST > ' + newLATEST);
 				
 				teleportMe( newLATESTnohash );
 
@@ -239,14 +257,18 @@ $(window).load(function () {
 
 		$('body').touchwipe({
 			wipeLeft : function () {
-				$('#menu').removeClass('active');
-				$('#themenu').removeClass('show');
-				$('.topbar, .bottombar, ' + aligner).removeClass('showmenu');
+				if(LEVEL >= 1){
+					$('#menu').removeClass('active');
+					$('#themenu').removeClass('show');
+					$('.topbar, .bottombar, ' + aligner).removeClass('showmenu');
+				}
 			},
 			wipeRight : function () {
-				$('#menu').addClass('active');
-				$('#themenu').addClass('show');
-				$('.topbar, .bottombar, ' + aligner).addClass('showmenu');
+				if(LEVEL >= 1){
+					$('#menu').addClass('active');
+					$('#themenu').addClass('show');
+					$('.topbar, .bottombar, ' + aligner).addClass('showmenu');
+				}
 			},
 			//wipeUp: function() { alert("up"); },
 			//wipeDown: function() { alert("down"); },
@@ -262,6 +284,8 @@ $(window).load(function () {
 		
 			$('.teleport').unbind(eventEnd).bind(eventEnd, function (e) {
 				e.preventDefault();
+				
+				
 				var _this = this;
 				
 				$(_this).addClass('active');
@@ -273,8 +297,15 @@ $(window).load(function () {
 				$('.menu').removeClass('active');
 				
 				var where = $(this).attr('data-page');
-				LEVEL = $(this).attr('data-level');
-				console.log(LEVEL);
+				
+				var LEV = $(this).attr('data-level');
+				if( LEV != 'none' ) {
+					LEVEL = LEV;
+				}else{
+					nolevel = true;
+				}
+				
+				//console.log(LEVEL);
 				
 				teleportMe( where );
 
@@ -283,6 +314,7 @@ $(window).load(function () {
 
 			$('.selectbtn img').unbind(eventEnd).bind(eventEnd, function (e) {
 				//e.preventDefault();
+
 				var id = $(this).parent().parent().data('id');
 				if (!$(this).parent().parent().hasClass('selected')) {
 					$(this).parent().parent().addClass('selected');
@@ -303,7 +335,7 @@ $(window).load(function () {
 
 			$('.buybtn').unbind(eventEnd).bind(eventEnd, function (e) {
 				//e.preventDefault();
-
+				
 				$('#buyoverlay').addClass('prepare').addClass('scale');
 				setTimeout(function () {
 					$('#buyoverlay').addClass('scaleIn');
@@ -330,41 +362,165 @@ $(window).load(function () {
 
 			$('.detailsbtn').unbind(eventEnd).bind(eventEnd, function (e) {
 				//e.preventDefault();
-
+				
 				$('#overlay').addClass('scale');
 				setTimeout(function () {
 					$('#overlay').addClass('scaleIn');
 				}, 100);
 			});
+			
+			$('.bagbtn').unbind(eventEnd).bind(eventEnd, function (e) {
+				//e.preventDefault();
+				
+				var where = $(this).attr('data-bag');
+				
+				$('#ajaxoverlay').addClass('scale');
+				setTimeout(function () {
+					$.get(where + '.html',{ "_": $.now() }, function(data){
 
+						$('#ajaxoverlay .mybag').html(data);
+						$('#ajaxoverlay').addClass('scaleIn');
+						bindEvents();
+					});
+
+					
+				}, 100);
+			});
+			
 			$('.overlay .backbtn').unbind(eventEnd).bind(eventEnd, function (e) {
 				e.preventDefault();
 
-				$('#overlay').addClass('scaleOut');
+				$(this).parent().addClass('scaleOut');
 				//$(this).parent().removeClass('scaleIn');
 
 				var _this = $(this);
+				
+				var id = _this.parent().attr('id');
 
 				setTimeout(function () {
 					//_this.parent().removeClass('scale').removeClass('prepare');
-					_this.parent('#overlay').removeClass('scaleIn');
+					_this.parent().removeClass('scaleIn');
 					_this.parent().removeClass('scaleOut');
 					_this.parent().removeClass('scale');
+					
+					if(id == 'caruseloverlay'){
+						$('.tulemus, .results').removeClass('anim_in');
+						$('.carusel .normal').removeClass('anim_' + anim + '0');
+					}
+					
+					if(id == 'ajaxoverlay'){
+						$('#ajaxoverlay .mybag').html('');
+					}
+					
 				}, 300);
 			});
-
-			/* MAKE HOVER */
-			/* FOR STATIC ELEMENTS ONLY, NOT WORKING ON SCROLLABLE!! */
-
-			$('.touchhover').unbind(eventEnd).bind('touchstart', function (e) {
-				e.preventDefault();
-				$(this).addClass('hover');
-			}).unbind(eventEnd).bind(eventEnd, function (e) {
+			
+			
+			$('.tulemusbtn').unbind(eventEnd).bind(eventEnd, function (e) {
 				//e.preventDefault();
-				$(this).removeClass('hover');
+				
+				var n = $(this).attr('data-result');
+				var r = $('#tulemusinput' + n).val();
+				r = Number(r);
+				console.log(n, r);
+				
+				if(r && r < 101){
+				
+					$('#caruseloverlay').addClass('scale');
+					setTimeout(function () {
+							$('#caruseloverlay').addClass('scaleIn');
+					}, 100);
+					
+					var newresult = Number(TOTALRESULT) + Number(r);
+					
+					TOTALRESULT = newresult.toFixed(0);
+					
+					if(r > 70) {
+						anim = '7';
+						tulemus = 'Suurepärane';
+					}
+					if(r < 70) {
+						anim = '6';
+						tulemus = 'hea';
+					}
+					if(r < 60) {
+						anim = '5';
+						tulemus = 'ülekeskmine';
+					}
+					if(r < 50){
+						 anim = '4';
+						 tulemus = 'Keskmine';
+					}
+					if(r < 40) {
+						anim = '3';
+						tulemus = 'alla keskmise';
+					}
+					if(r < 30) {
+						anim = '2';
+						tulemus = 'nõrk';
+					}
+					if(r < 10) {
+						anim = '1'; 
+						tulemus = 'Väga nõrk';
+					}
+					
+					console.log(n, r, anim);
+					
+					setTimeout(function(){
+						$('.carusel .normal').addClass('anim_' + anim + '0');
+						$('.carusel .greentriangle').attr('src', 'i/tulemus' + anim + '.png');
+						$('.result span').text( tulemus );
+					}, 500);
+
+					setTimeout(function(){
+						$('.tulemus, .results').addClass('anim_in');
+					}, 5000);
+					
+					
+					if(n == '5'){
+						setTimeout(function(){
+							
+							$('#caruselTOTALoverlay .finalresults h3').text(TOTALRESULT + ' p');
+						
+							$('#caruselTOTALoverlay').addClass('scale');
+							setTimeout(function () {
+									$('#caruselTOTALoverlay').addClass('scaleIn');
+							}, 100);
+						}, 7000);
+					}
+				}
+				
+			});
+			
+			
+			 $(".touchslider").touchSlider({
+				container: this,
+				duration: 350, // the speed of the sliding animation in milliseconds
+				delay: 3000, // initial auto-scrolling delay for each loop
+				margin: 5, // borders size. The margin is set in pixels.
+				mouseTouch: true,
+				namespace: "touchslider",
+				next: ".touchslider-next", // jQuery object for the elements to which a "scroll forwards" action should be bound.
+				currentClass: "touchslider-nav-item-current", // class name for current pagination item.
+				prev: ".touchslider-prev", // jQuery object for the elements to which a "scroll backwards" action should be bound.
+				autoplay: false // whether to move from image to image automatically
+			 });
+			
+			var t=0; // the height of the highest element (after the function runs)
+			$(".touchslider-item").each(function () {
+				$this = $(this);
+				if ( $this.outerHeight() > t ) {
+					t=$this.outerHeight();
+				}
 			});
 		
-		}
+			$('.touchslider-viewport, .touchslider-viewport div').height( t );
+			
+			
+			
+		} /* bindEvents */
+		
+			
 
 	});
 })(window.jQuery);
