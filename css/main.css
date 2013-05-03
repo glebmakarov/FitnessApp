@@ -44,11 +44,6 @@ img, div, section, span{
  * Customize the background color to match your design.
  */
 
-::-moz-selection {
-    background: #b3d4fc;
-    text-shadow: none;
-}
-
 ::selection {
     background: #b3d4fc;
     text-shadow: none;
@@ -106,10 +101,6 @@ textarea {
     *zoom: 1;
 }
 
-* {
--webkit-user-select: none;
--webkit-touch-callout: none;        
-}
 
 
 /* ==========================================================================
@@ -305,7 +296,7 @@ background: radial-gradient(ellipse at center,  rgba(255,255,255,0.71) 0%,rgba(2
 
 
 
-#themenu {
+#themenu, #thefilter {
 	background: none repeat scroll 0 0 #000000;
 	height: 100%;
 	position: fixed;
@@ -330,7 +321,7 @@ background: radial-gradient(ellipse at center,  rgba(255,255,255,0.71) 0%,rgba(2
   
 }
 
-#themenu.show {
+#themenu.show, #thefilter.show {
 
 	-webkit-transform: translate3d(0, 0, 0);
 
@@ -348,7 +339,7 @@ background: radial-gradient(ellipse at center,  rgba(255,255,255,0.71) 0%,rgba(2
   border-bottom: 1px solid #202020;
   color: #FFFFFF;
   display: block;
-  padding: 9% 5%;
+  padding: 5% 4%;
   position: relative;
 }
 
@@ -677,6 +668,33 @@ input:focus {
   width: 25px;
   height: 25px;
 }
+
+.me.harjutused img{
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  float: left;
+  margin: 3% 5%;
+  width: 30px;
+  height: 30px;
+}
+
+.me.harjutused img.filter{
+	border: none;
+	border-radius: 0;
+	background: rgb(85,103,113);
+	background: -moz-linear-gradient(top,  rgba(85,103,113,1) 0%, rgba(20,20,20,1) 100%);
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(85,103,113,1)), color-stop(100%,rgba(20,20,20,1)));
+	background: -webkit-linear-gradient(top,  rgba(85,103,113,1) 0%,rgba(20,20,20,1) 100%);
+	background: linear-gradient(to bottom,  rgba(85,103,113,1) 0%,rgba(20,20,20,1) 100%);
+
+	float: left;
+	margin: 0;
+	padding: 3% 6%;
+    width: 46px;
+	height: auto;
+}
+
 .me.title h3 {
   color: #000000;
   float: left;
@@ -697,6 +715,7 @@ input:focus {
 	width: 100%;
 	height: 300px;
 	background: #000;
+	position: relative;
 	
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -1878,9 +1897,156 @@ input:focus {
 
 
 
+.harjutus_item {
+  float: left;
+  margin: 8% 4% 1%;
+  text-align: center;
+  width: 42%;
+  position: relative;
+}
+
+.harjutus_item .img{
+  position: relative;
+}
+
+.harjutus_item img {
+  height: auto;
+  padding: 5%;
+  width: 90%;
+}
+
+.harjutus_item .play {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.harjutus_item .img .bubble {
+  background: none repeat scroll 0 0 #FDCB1D;
+  border-radius: 50% 50% 50% 50%;
+  color: #000000;
+  height: 19%;
+  padding: 5%;
+  position: absolute;
+  top: 65%;
+  right: 0;
+  width: 15%;
+}
+
+
+.harjutus_item h3{
+	color: #fff;
+	font-size: 15px;
+}
 
 
 
+
+
+
+
+
+
+
+#thefilter {
+	background: #fff;
+	text-align: center;
+}
+
+
+.manfront {
+  left: 50%;
+  margin-left: -110px;
+  opacity: 1;
+  position: absolute;
+  top: 14px;
+  width: 240px;
+  z-index: 10;
+}
+
+.manback {
+  left: 10px;
+  position: relative;
+  top: 14px;
+  width: 210px;
+
+}
+
+#thefilter .manfront{
+	/* 
+	-webkit-transition: all 0.20s;
+	-moz-transition: all 0.20s;
+	transition: all 0.20s; */
+}
+#thefilter .manback{
+/* 	
+	-webkit-transition: all 0.20s;
+	-moz-transition: all 0.20s;
+	transition: all 0.20s;*/
+} 
+
+.manhide{
+	opacity: 0;
+	z-index: 0;
+}
+
+#thefilter h1 {
+  background: none repeat scroll 0 0 #000000;
+  color: #FFFFFF;
+  padding: 8%;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#thefilter h4 {
+  font-size: 18px;
+  margin: 7% 0 0;
+  position: relative;
+  z-index: 200;
+}
+
+.resetfilter{
+	margin-bottom: 4%;
+}
+
+
+.man {
+  text-align: center;
+  position: relative;
+}
+
+
+#frontOver {
+  display: inline;
+  left: 50%;
+  margin-left: -85px;
+  max-width: 170px;
+  position: absolute;
+  top: 79px;
+  width: 100%;
+  z-index: 100;
+}
+
+.manFlip {
+  height: auto;
+  left: 6%;
+  position: absolute;
+  top: 14%;
+  width: 17%;
+  z-index: 2000;
+}
+
+path{
+	opacity: 0;
+	-webkit-transition: all 0.20s;
+	-moz-transition: all 0.20s;
+	transition: all 0.20s
+}
+
+
+.pathOver path{
+	opacity: .3;
+}
 
 
 
@@ -1955,6 +2121,8 @@ input:focus {
 		  padding: 4% 0 0 4%;
 		}
 		
+
+		
 		
 		.loadedcontent h1 {
 		  font-size: 27px;
@@ -2010,7 +2178,7 @@ input:focus {
 	
 		
 		#themenu .menu span {
-			background-size: 80% auto;
+			background-size: 75% auto;
 			height: 32px;
 			width: 32px;
 		}
@@ -2025,7 +2193,7 @@ input:focus {
 		
 		#themenu .menu p {
 		  display: inline-block;
-		  font-size: 15px;
+		  font-size: 14px;
 		  font-weight: bold;
 		  padding: 3.5% 0 0 4%;
 		}
@@ -2062,4 +2230,9 @@ input:focus {
 		}
 		
 		
+	.harjutus_item h3{
+
+		font-size: 12px;
+	}
+
 }
