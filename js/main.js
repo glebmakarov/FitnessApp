@@ -14,6 +14,7 @@ var bbar = "";
 var wind = jQuery(window).height();
 var toBuy = new Array();
 var eventEnd = (navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? "click" : "click";
+var iofsett = (navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPod/i)) ? 20 : 0;
 var goingback = false;
 var updating = false;
 var anim = '1';
@@ -31,6 +32,8 @@ jQuery(window).resize(function ($) {
 	//jQuery('.page-wrap').css('height', Number(jQuery(aligner).height() + plus) +  'px');
 
 	console.log(jQuery(window).width() + 'px');
+	
+	//console.log( window.outerHeight, jQuery(window).height() );
 });
 
 
@@ -38,9 +41,10 @@ function resizeby(_this, _plus) {
 
 	me = jQuery(_this + ' .me').height();
 
+	//wind = Number(wind) - Number(iofsett);
 	var toscrollheight = Number(wind - (offset + me + bbar));
 	//console.log(newheight , toscrollheight);
-
+	
 	
 	jQuery('.page-wrap').css('height', wind + 'px');
 	//setTimeout(function () {
@@ -63,6 +67,7 @@ function resizeby(_this, _plus) {
 	aligner = _this;
 	plus = _plus;
 
+	//alert( jQuery(window).height() );
 }
 
 function reposition() {
@@ -75,7 +80,18 @@ function reposition() {
 		setTimeout(function () {
 			$('#loading').css('display','none');
 		}, 200);
-	}, 500);
+		
+		var c = jQuery('.open').attr('id');
+		
+		jQuery('.menu').removeClass( 'selected' );
+		
+		jQuery('.menu').each(function(){
+			if(jQuery( this ).attr('data-page') == c){
+				jQuery( this ).addClass( 'selected' );
+			}
+		});
+		
+	}, 400);
 }
 
 function hideMenu() {
@@ -90,6 +106,9 @@ function hideMenu() {
 		jQuery('#thefilter').removeClass('show');
 		jQuery('.topbar, .bottombar, ' + aligner).removeClass('showmenu');
 	}
+	
+
+	//console.log( LATEST );
 }
 
 
@@ -298,12 +317,18 @@ $(window).load(function () {
 			},
 			//wipeUp: function() { alert("up"); },
 			//wipeDown: function() { alert("down"); },
-			min_move_x : 15,
-			min_move_y : 15,
+			min_move_x : 22,
+			min_move_y : 22,
 			preventDefaultEvents : false
 		});
 
-
+		function addHover(__this){
+			var _this = __this;	
+			$(_this).addClass('active');
+			setTimeout(function () {
+				$(_this).removeClass('active')
+			}, 500);
+		}
 		
 		
 		bindEvents();
@@ -320,13 +345,8 @@ $(window).load(function () {
 			$('.teleport').unbind(eventEnd).bind(eventEnd, function (e) {
 				e.preventDefault();
 				
+				addHover( this );
 				
-				var _this = this;
-				
-				$(_this).addClass('active');
-				setTimeout(function () {
-					$(_this).removeClass('active')
-				}, 500);
 				//updating = true;
 						
 				$('.menu').removeClass('active');
@@ -365,22 +385,76 @@ $(window).load(function () {
 				}
 				
 				
+				
 			});
 		
 		
 		$('#svgFront g').unbind(eventEnd).bind(eventEnd, function (e) {
 			//console.log(this);
-			if( $(this).attr("class") != "pathOver" ){
-				$(this).attr("class", "pathOver");
+			var id = $(this).attr("data-group");
+			var classes = $(this).attr("class");
+			var name =  $(this).attr("data-name");
+			$('.lihasname').text( name );
+			
+			var hasclass = classes.replace( "group" + id + " ", '');
+			
+			console.log( id, classes, hasclass );
+			
+			
+			if( hasclass != "pathOver" ){
+				$('#svgFront g').each(function(){
+					var clas = $(this).attr("class");
+					$(this).attr("class", clas.replace(' pathOver',''));
+				});
+				
+				$('#svgFront .group' + id).attr("class", "group" + id + " pathOver");
 			}else{
-				$(this).attr("class", "");
+				$('#svgFront .group' + id).attr("class", "group" + id);
 			}
+			
+			
+		})
+		
+		$('#svgBack g').unbind(eventEnd).bind(eventEnd, function (e) {
+			//console.log(this);
+			var id = $(this).attr("data-group");
+			var classes = $(this).attr("class");
+			var name =  $(this).attr("data-name");
+			$('.lihasname').text( name );
+			
+			var hasclass = classes.replace( "group" + id + " ", '');
+			
+			//console.log( id, classes, hasclass );
+			
+			
+			if( hasclass != "pathOver" ){
+				$('#svgBack g').each(function(){
+					var clas = $(this).attr("class");
+					$(this).attr("class", clas.replace(' pathOver',''));
+				});
+				
+				$('#svgBack .group' + id).attr("class", "group" + id + " pathOver");
+			}else{
+				$('#svgBack .group' + id).attr("class", "group" + id);
+			}
+			
+			
 		})
 		
 		$('.resetfilter').unbind(eventEnd).bind(eventEnd, function (e) {
-			$('#svgFront g').each(function(){
-				$(this).attr("class", "");
-			});
+				$('#svgFront g').each(function(){
+					var clas = $(this).attr("class");
+					$(this).attr("class", clas.replace(' pathOver',''));
+				});
+				
+				$('#svgBack g').each(function(){
+					var clas = $(this).attr("class");
+					$(this).attr("class", clas.replace(' pathOver',''));
+				});
+	
+				$('.lihasname').text( 'Vali lihasgrupp' );
+			
+					addHover( this );
 		});
 		
 		
@@ -389,18 +463,31 @@ $(window).load(function () {
 				//manback
 				
 				if( $('.manback').hasClass('manhide') ){
-					$('.manfront').addClass('manhide');
+					$('.manfront, #frontOver').addClass('manhide');
+					
+					$('#svgFront g').each(function(){
+						var clas = $(this).attr("class");
+						$(this).attr("class", clas.replace(' pathOver',''));
+					});
 					
 					setTimeout( function(){
-						$('.manback').removeClass('manhide');
+						$('.manback, #backOver').removeClass('manhide');
 					}, 5);
+					
 				}else{
-					$('.manback').addClass('manhide');
+					$('.manback, #backOver').addClass('manhide');
+					
+					$('#svgBack g').each(function(){
+						var clas = $(this).attr("class");
+						$(this).attr("class", clas.replace(' pathOver',''));
+					});
 					
 					setTimeout( function(){
-						$('.manfront').removeClass('manhide');
+						$('.manfront, #frontOver').removeClass('manhide');
 					}, 5);
 				}
+	
+				$('.lihasname').text( 'Vali lihasgrupp' );
 		});
 		
 		
@@ -410,6 +497,7 @@ $(window).load(function () {
 				//e.preventDefault();
 
 				var id = $(this).parent().parent().data('id');
+				
 				if (!$(this).parent().parent().hasClass('selected')) {
 					$(this).parent().parent().addClass('selected');
 					toBuy.push(id);
@@ -424,7 +512,7 @@ $(window).load(function () {
 				} else {
 					$('.buybtn').removeClass('slideIn');
 				}
-				//console.log(toBuy.length);
+				console.log(toBuy);
 			});
 
 			$('.buybtn').unbind(eventEnd).bind(eventEnd, function (e) {
@@ -438,19 +526,32 @@ $(window).load(function () {
 				var here = $('#buyoverlay .checkout');
 
 				here.html('');
-
+				
+				var html = '';
+				
+				var totalprice = 0;
+				
 				for (var i = 0; i < toBuy.length; i++) {
 
 					var id = toBuy[i];
 
-					var name = $('#treenerpakkumised .box33[data-id=' + id + ']').children('h4.name').text();
-					var price = $('#treenerpakkumised .box33[data-id=' + id + ']').children('h4.price').text();
+					var name = $('.box33[data-id=' + id + ']').children('h4.name').text();
+					var price = $('.box33[data-id=' + id + ']').children('h4.price').text();
+					
 
-					var html = '<div class="inbasket"></div>';
+					html += '<div class="inbasket"><div class="naming">'+ name +'</div><div class="pricing">'+ price +'</div><div class="erase"></div><div class="clear"></div></div>';
 
-					here.append(name + ' ');
+					price = price.replace(' €', '');
+					totalprice = Number(totalprice) + Number(price);
+					//console.log( Number(totalprice), Number(price));
 
 				}
+				
+				totalprice = totalprice.toFixed(2);
+				
+				html += '<div class="intotal"><div class="naming">Summa:</div><div class="pricing">'+ totalprice +'  €</div><div class="clear"></div></div>';
+				
+				here.append(html);
 
 			});
 
@@ -460,6 +561,24 @@ $(window).load(function () {
 				$('#overlay').addClass('scale');
 				setTimeout(function () {
 					$('#overlay').addClass('scaleIn');
+				}, 100);
+			});
+			
+			$('.selectivebtn').unbind(eventEnd).bind(eventEnd, function (e) {
+				//e.preventDefault();
+				
+				$('#selectiveoverlay').addClass('scale');
+				setTimeout(function () {
+					$('#selectiveoverlay').addClass('scaleIn');
+				}, 100);
+			});
+			
+			$('.theicon').unbind(eventEnd).bind(eventEnd, function (e) {
+				//e.preventDefault();
+				
+				$('#yesnooverlay').addClass('scale');
+				setTimeout(function () {
+					$('#yesnooverlay').addClass('scaleIn');
 				}, 100);
 			});
 			
@@ -509,89 +628,254 @@ $(window).load(function () {
 				}, 350);
 			});
 			
+			$('.overlay .closebtn, .overlay .closingbtn').unbind(eventEnd).bind(eventEnd, function (e) {
+				e.preventDefault();
+				
+				addHover( this );
+
+				$(this).parent().parent().addClass('scaleOut');
+				//$(this).parent().removeClass('scaleIn');
+
+				var _this = $(this);
+
+				setTimeout(function () {
+					//_this.parent().removeClass('scale').removeClass('prepare');
+					_this.parent().parent().removeClass('scaleIn').removeClass('scaleOut');
+					//_this.parent().removeClass('scaleOut');
+					setTimeout(function () {
+						_this.parent().parent().removeClass('scale');
+					}, 50);
+					
+				}, 350);
+			});
 			
-			$('.tulemusbtn').unbind(eventEnd).bind(eventEnd, function (e) {
+			$('.answer input').unbind('focus').bind('focus', function (e) {
+				$('.tulemusbtn').unbind(eventEnd);
+			});
+		
+			$('.answer input').unbind('blur').bind('blur', function (e) {
+				$('.tulemusbtn').unbind(eventEnd).bind(eventEnd, function (e) {
 				//e.preventDefault();
 				
-				var n = $(this).attr('data-result');
-				var r = $('#tulemusinput' + n).val();
-				r = Number(r);
-				//console.log(n, r);
+					var n = $(this).attr('data-result');
+					var r = $('#tulemusinput' + n).val();
+					r = Number(r);
+						//console.log(n, r);
+						if(r && r < 101){
+					
 				
-				if(r && r < 101){
-				
-					$('#caruseloverlay').addClass('scale');
-					setTimeout(function () {
-							$('#caruseloverlay').addClass('scaleIn');
-					}, 100);
-					
-					var newresult = Number(TOTALRESULT) + Number(r);
-					
-					TOTALRESULT = newresult.toFixed(0);
-					
-					if(r > 70) {
-						anim = '7';
-						tulemus = 'Suurepärane';
-					}
-					if(r < 70) {
-						anim = '6';
-						tulemus = 'hea';
-					}
-					if(r < 60) {
-						anim = '5';
-						tulemus = 'ülekeskmine';
-					}
-					if(r < 50){
-						 anim = '4';
-						 tulemus = 'Keskmine';
-					}
-					if(r < 40) {
-						anim = '3';
-						tulemus = 'alla keskmise';
-					}
-					if(r < 30) {
-						anim = '2';
-						tulemus = 'nõrk';
-					}
-					if(r < 10) {
-						anim = '1'; 
-						tulemus = 'Väga nõrk';
-					}
-					
-					console.log(n, r, anim);
-					
-					setTimeout(function(){
-						$('.carusel .normal').addClass('anim_' + anim + '0');
-						$('.carusel .greentriangle').attr('src', 'i/tulemus' + anim + '.png');
-						$('.result span').text( tulemus );
-					}, 500);
-
-					setTimeout(function(){
-						$('.tulemus, .results').addClass('anim_in');
-					}, 5000);
-					
-					
-					if(n == '5'){
-						setTimeout(function(){
-							
-							$('#caruselTOTALoverlay .finalresults h3').text(TOTALRESULT + ' p');
-						
-							$('#caruselTOTALoverlay').addClass('scale');
+							$('#caruseloverlay').addClass('scale');
 							setTimeout(function () {
-									$('#caruselTOTALoverlay').addClass('scaleIn');
+									$('#caruseloverlay').addClass('scaleIn');
 							}, 100);
-						}, 7000);
+							
+							var newresult = Number(TOTALRESULT) + Number(r);
+							
+							TOTALRESULT = newresult.toFixed(0);
+							
+							if(r > 70) {
+								anim = '7';
+								tulemus = 'Suurepärane';
+							}
+							if(r < 70) {
+								anim = '6';
+								tulemus = 'hea';
+							}
+							if(r < 60) {
+								anim = '5';
+								tulemus = 'ülekeskmine';
+							}
+							if(r < 50){
+								 anim = '4';
+								 tulemus = 'Keskmine';
+							}
+							if(r < 40) {
+								anim = '3';
+								tulemus = 'alla keskmise';
+							}
+							if(r < 30) {
+								anim = '2';
+								tulemus = 'nõrk';
+							}
+							if(r < 10) {
+								anim = '1'; 
+								tulemus = 'Väga nõrk';
+							}
+							
+							//console.log(n, r, anim);
+							
+							setTimeout(function(){
+								$('.carusel .normal').addClass('anim_' + anim + '0');
+								$('.carusel .greentriangle').attr('src', 'i/tulemus' + anim + '.png');
+								$('.result span').text( tulemus );
+							}, 500);
+
+							setTimeout(function(){
+								$('.tulemus, .results').addClass('anim_in');
+							}, 5000);
+							
+							
+							if(n == '5'){
+								setTimeout(function(){
+									
+									$('#caruselTOTALoverlay .finalresults h3').text(TOTALRESULT + ' p');
+								
+									$('#caruselTOTALoverlay').addClass('scale');
+									setTimeout(function () {
+											$('#caruselTOTALoverlay').addClass('scaleIn');
+									}, 100);
+								}, 7000);
+							}
+							
+							addHover( this );
+					
 					}
+		
+			});
+			});
+			
+			
+			
+			$('.times .plus').unbind(eventEnd).bind(eventEnd, function (e) {
+				var par = $(this).parent();
+				var max = 7;
+				var current = par.children('span').text();	
+				if(current <= max){
+					par.children('span').text( Number(current) + Number(1) );
 				}
+			});
+			
+			$('.times .minus').unbind(eventEnd).bind(eventEnd, function (e) {
+				var par = $(this).parent();
+				var min = 2;
+				var current = par.children('span').text();		
+				if(current >= min){
+					par.children('span').text( Number(current) - Number(1) );
+				}
+			});
+			
+			
+			$('.weight .plus').unbind(eventEnd).bind(eventEnd, function (e) {
+			
+				var par = $(this).parent();
+				var max = 295;
+				var current = par.children('span').text();
 				
+				if(current <= max){
+					par.children('span').text( Number(current) + Number(5) );
+				}
+			
+				//console.log( par.children('span').text() );
+			});
+			
+			$('.weight .minus').unbind(eventEnd).bind(eventEnd, function (e) {
+			
+				var par = $(this).parent();
+				var min = 15;
+				var current = par.children('span').text();
+				
+				if(current >= min){
+					par.children('span').text( Number(current) - Number(5) );
+				}
 			});
 			
 
 			
 			
+			var settime = 120000; // 20 minutes
+			
+			$('#timer .plus').unbind(eventEnd).bind(eventEnd, function (e) {
+				var max = 240000; // 40 minutes
+				var current = settime;	
+				if(current <= max){
+					//par.children('span').text( Number(current) + Number(1) );
+					var newtime = Number(current) + Number(30000);
+					settime = newtime;
+					//console.log( newtime , formatTime(newtime) );
+					$('#timer .time').text( formatTime(newtime) );
+				}
+			});
+			
+			$('#timer .minus').unbind(eventEnd).bind(eventEnd, function (e) {
+				var min = 30000;
+				var current = settime;		
+				if(current >= min){
+					//par.children('span').text( Number(current) - Number(1) );
+					var newtime = Number(current) - Number(30000);
+					settime = newtime;
+					//console.log( newtime , formatTime(newtime) );
+					$('#timer .time').text( formatTime(newtime) );
+				}
+			});
+
+
+			$('.timeractions').unbind(eventEnd).bind(eventEnd, function (e) {
+				if( !$(this).hasClass('started') ){
+				$(this).addClass('started');
+					$(this).addClass('started');
+
+					$('.timeractions h3').text('PAUSE');
+
+				}else{
+					$(this).removeClass('started');
+
+					$('.timeractions h3').text('START');
+				}
+			});
+			
+			$('.altertimer .timer').unbind(eventEnd).bind(eventEnd, function (e) {
+				$('#timeroverlay').addClass('scale');
+				setTimeout(function () {
+					$('#timeroverlay').addClass('scaleIn');
+					
+				}, 100);
+				
+			});
+			
+			
+			
+			$('.soovitusedbtn, .alternatiivbtn').unbind(eventEnd).bind(eventEnd, function (e) {
+			
+				if( !$(this).hasClass('active') ){
+					$(this).addClass('active') 
+					$('.popup').removeClass('pophide');
+					setTimeout(function(){
+						$('.popup').addClass('popshow');
+					}, 100);
+				}else{
+					$(this).removeClass('active') 
+					$('.popup').removeClass('popshow');
+					setTimeout(function(){
+						$('.popup').addClass('pophide');
+					}, 300);
+				}
+			
+			});
+			
+		
+		
+		
+			$('.touchhover').on('touchstart', function(e){
+				e.preventDefault();
+				$(this).addClass('hover');
+			});
+
+			$('.touchhover').on('touchend', function(e){
+				e.preventDefault();
+				$(this).removeClass('hover');
+			});
 		} /* bindEvents */
 		
 			
+			
+			
 
 	});
+	
+	function playVideo(_this){
+		_this.play();
+		_this.webkitEnterFullscreen();
+	}
+	
 })(window.jQuery);
+
